@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root{
+    background-color: #0D0714;
+    color: white;
+}
+
+.loader{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
