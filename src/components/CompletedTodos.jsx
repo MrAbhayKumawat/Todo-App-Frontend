@@ -36,9 +36,7 @@ const CompletedTodos = () => {
 
         setLoading(false);
       } catch (error) {
-        toast.error(
-          "An error occurred while fetching the completed todos. Please try again."
-        );
+       console.log(error)
         setLoading(false);
       }
     };

@@ -7,13 +7,13 @@ import {
   updateTodoStatus,
 } from "../TodosService/TodosService";
 import { toast } from "react-toastify";
-import { TodosContext } from "./../context/TodosContext"; // Import TodosContext
+import { TodosContext } from "./../context/TodosContext";
 import { ClipLoader } from "react-spinners";
 
 const TodoList = () => {
   const [todos, setTodos] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { fetchagain, changefetchstate } = useContext(TodosContext); // Use TodosContext
+  const { fetchagain, changefetchstate } = useContext(TodosContext);
   const userdata = JSON.parse(localStorage.getItem("userdata"));
   const userId = userdata?.id;
 
@@ -28,7 +28,6 @@ const TodoList = () => {
       try {
         const fetchedTodos = await getAllTodos(userId);
         if (Array.isArray(fetchedTodos)) {
-          // Filter out completed todos
           const filteredTodos = fetchedTodos.filter((todo) => !todo.completed);
           setTodos(filteredTodos);
         } else {
@@ -36,30 +35,20 @@ const TodoList = () => {
         }
         setLoading(false);
       } catch (error) {
-        toast.error(
-          "An error occurred while fetching the todos. Please try again."
-        );
+        console.error(error);
         setLoading(false);
       }
     };
 
     fetchTodos();
-  }, [fetchagain, userId]); // Added userId as a dependency
+  }, [fetchagain, userId]);
 
   const handleStatusUpdate = async (todoId) => {
     try {
       await updateTodoStatus(userId, todoId, "true");
       toast.success("Task status updated successfully");
 
-      // Update the todos state to reflect the change
-      setTodos(
-        todos
-          .map((todo) =>
-            todo._id === todoId ? { ...todo, completed: true } : todo
-          )
-          .filter((todo) => !todo.completed)
-      ); // Filter out the completed task
-
+      setTodos(todos.filter((todo) => todo._id !== todoId));
       changefetchstate();
     } catch (error) {
       toast.error(
@@ -68,25 +57,18 @@ const TodoList = () => {
       );
     }
   };
-  const handledeletetodo = async (todoId) => {
+
+  const handleDeleteTodo = async (todoId) => {
     try {
       await deletetodo(userId, todoId);
       toast.success("Task deleted successfully");
 
-      // Update the todos state to reflect the change
-      setTodos(
-        todos
-          .map((todo) =>
-            todo._id === todoId ? { ...todo, completed: true } : todo
-          )
-          .filter((todo) => !todo.completed)
-      ); // Filter out the completed task
-
+      setTodos(todos.filter((todo) => todo._id !== todoId));
       changefetchstate();
     } catch (error) {
       toast.error(
         error.message ||
-          "An error occurred while updating the task status. Please try again."
+          "An error occurred while deleting the task. Please try again."
       );
     }
   };
@@ -94,10 +76,8 @@ const TodoList = () => {
   return (
     <div className="flex justify-center items-center mt-10">
       <div className="sm:w-[38vw]">
-        {todos.length > 0 ? (
+        {todos.length > 0 && (
           <h1 className="mb-2">Tasks to do - {todos.length}</h1>
-        ) : (
-          ""
         )}
         {loading ? (
           <div className="loader">
@@ -121,17 +101,13 @@ const TodoList = () => {
               <div className="flex items-center sm:gap-x-4 max-[630px]:gap-x-2">
                 <span
                   className="text-[#9E78CF] cursor-pointer text-xl"
-                  onClick={() => {
-                    handleStatusUpdate(todo._id);
-                  }}
+                  onClick={() => handleStatusUpdate(todo._id)}
                 >
                   <IoMdCheckmark />
                 </span>
                 <span
                   className="text-[#9E78CF] cursor-pointer text-xl"
-                  onClick={() => {
-                    handledeletetodo(todo._id);
-                  }}
+                  onClick={() => handleDeleteTodo(todo._id)}
                 >
                   <AiOutlineDelete />
                 </span>

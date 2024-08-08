@@ -2,12 +2,12 @@ import React, { useContext, useState } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
 import { toast } from "react-toastify";
 import { createtodo } from "../TodosService/TodosService";
-import { TodosContext } from "./../context/TodosContext"; // Import TodosContext
+import { TodosContext } from "./../context/TodosContext";
 
 const TodoForm = () => {
   const [task, setTask] = useState("");
   const [loading, setLoading] = useState(false);
-  const { changefetchstate } = useContext(TodosContext); // Use TodosContext
+  const { changefetchstate } = useContext(TodosContext);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -24,7 +24,7 @@ const TodoForm = () => {
       setTask("");
       changefetchstate();
     } catch (error) {
-      error(
+      toast.error(
         error.message ||
           "An error occurred while creating the task. Please try again."
       );

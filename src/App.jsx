@@ -16,10 +16,10 @@ import ProtectedRoute from "./ProtectedRoutes/ProtectedRoute";
 
 function Layout() {
   const location = useLocation();
-  const currentPath = location.pathname;
+  const currentPath = location.pathname.toLowerCase(); // Ensures case insensitivity
   const token = Cookies.get("token");
 
-  if (!token && (currentPath === "/Todos" || currentPath === "/todos")) {
+  if (!token && (currentPath === "/todos")) {
     return <Navigate to="/login" />;
   }
 
