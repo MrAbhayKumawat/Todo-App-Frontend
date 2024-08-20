@@ -3,6 +3,7 @@ import { AiOutlinePlus } from "react-icons/ai";
 import { toast } from "react-toastify";
 import { createtodo } from "../TodosService/TodosService";
 import { TodosContext } from "./../context/TodosContext";
+import ClipLoader from "react-spinners/ClipLoader"; // Importing ClipLoader
 
 const TodoForm = () => {
   const [task, setTask] = useState("");
@@ -46,10 +47,10 @@ const TodoForm = () => {
         />
         <button
           type="submit"
-          className="text-xl bg-[#9E78CF] p-3.5 rounded-md"
+          className="text-xl bg-[#9E78CF] p-3.5 rounded-md flex justify-center items-center"
           disabled={loading}
         >
-          <AiOutlinePlus />
+          {loading ? <ClipLoader size={20} color="#fff" /> : <AiOutlinePlus />}
         </button>
       </div>
     </form>
